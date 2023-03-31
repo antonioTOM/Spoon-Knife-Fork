@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -9,10 +8,47 @@
 <body>
   <h1 class="title">Here some dizzy color changing divs</h1>
   <br>
+  <p class="hex-color"></p>
   <div class="container">
     <div class="cngn-clr cngn-clr-1"></div>
     <div class="cngn-clr cngn-clr-2"></div>
     <div class="cngn-clr cngn-clr-3"></div>
   </div>
+  <script src="./app.js" type="module"></script>
+  <script type="module">
+    import { pickRandomHexColor, hexToRgb } from './app.js';
+    const colorBubbleDivs = document.querySelectorAll('.cngn-clr');
+    let counter = 0;
+    let hasGuessed = false;
+    const interval = setInterval(() => {
+      console.log('interval');
+      const pickedBackgroundColors = [];
+      if (counter < 20 && !hasGuessed) {
+        colorBubbleDivs.forEach(el => {
+          pickedBackgroundColors[pickedBackgroundColors.length] = el.style.backgroundColor = pickRandomHexColor();//`linear-gradient(${pickRandomHexColor()}, ${pickRandomHexColor()})`
+        });
+        document.querySelector('.hex-color').innerHTML = pickedBackgroundColors[Math.floor(Math.random() * pickedBackgroundColors.length)];
+        counter++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 5000);
+    function colorGuess(div) {
+      console.log(colorBubbleDivs[div].style.backgroundColor, document.querySelector('.hex-color').innerHTML);
+      if (colorBubbleDivs[div].style.backgroundColor === hexToRgb(document.querySelector('.hex-color').innerHTML)) {
+        console.log('test passed');
+        hasGuessed = true;
+      }
+    }
+    colorBubbleDivs[0].addEventListener('click', function() {
+      colorGuess(0);
+    });
+    colorBubbleDivs[1].addEventListener('click', function() {
+      colorGuess(1);
+    });
+    colorBubbleDivs[2].addEventListener('click', function() {
+      colorGuess(2);
+    });
+  </script>
 </body>
 </html>
